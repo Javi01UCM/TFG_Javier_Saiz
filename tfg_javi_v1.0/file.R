@@ -878,9 +878,12 @@ amm <- PEATONES_TOTAL %>%
 
 amm$num_distrito <- c(1, 7, 1, 9, 10, 2, 1, 1, 7)
 
+#Para que los nombres de las filas de amm en vez de estar numerados , sea el código postal
+row.names(amm)<-amm$CÓDIGO_POSTAL
+
 #algoritmo jerarquico simple
 datos_clust_simple <- hclust(dist(amm,method="euclidian"),method="single")
-plot
+plot(datos_clust_simple)
 
 #Visualizo el  dendograma
 #Selecciono 3 clusteres, k = 3
@@ -897,7 +900,7 @@ fviz_dend(datos_clust_simple, k = 3,
 
 #algoritmo jerarquico completo
 datos_clust_completo <- hclust(dist(amm,method="euclidian"),method="complete")
-plot
+plot(datos_clust_completo)
 
 #Selecciono 3 clusteres, k = 3
 fviz_dend(datos_clust_completo, k = 3,
@@ -913,7 +916,7 @@ fviz_dend(datos_clust_completo, k = 3,
 
 ##algoritmo jerarquico medio
 datos_clust_medio <- hclust(dist(amm,method="euclidian"),method="average")
-plot
+plot(datos_clust_medio)
 
 #Selecciono 3 clusteres, k = 3
 fviz_dend(datos_clust_medio, k = 3,
