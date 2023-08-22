@@ -844,45 +844,21 @@ cbind("Real" = real, "Prediccion" =valores_arima) %>%
 
 #--------------------------Clustering------------------------------
 
-#Adaptamos el formato de datos para trabajar con ellos de manera que podamos clasificarlos y 
-#utilizar algoritmos de clustering
-
-aux_dataset <- subset(PEATONES_TOTAL,HORA == "13:00" & OBSERVACIONES_DIRECCION == "Acera Pares")
-
-aux_dataset$IDENTIFICADOR <- NULL
-aux_dataset$NOMBRE_VIAL <- NULL
-aux_dataset$OBSERVACIONES_DIRECCION <- NULL
-aux_dataset$DISTRITO <- NULL
-aux_dataset$HORA <- NULL
-
-for(i in 1:3016){
-  for(j in 2:7){
-    if(is.na(aux_dataset[i,j])){
-      aux_dataset[i,j] <- 0
-    }
-  }
-}
-
-names(aux_dataset)
-names(aux_dataset)[3] <- "NUMERO_DISTRITO"
-names(aux_dataset)[4] <- "NUMERO"
-names(aux_dataset)[5] <- "CODIGO_POSTAL"
-
 #Hago una agrupación de PEATONES_TOTAL y una suma de los peatones para trabajar con el total
 #de peatones por código postal
-amm <- PEATONES_TOTAL %>%
+data_agrupacion <- PEATONES_TOTAL %>%
   group_by(CÓDIGO_POSTAL) %>%
   summarize(PEATONES=sum(PEATONES, na.rm=T))
 
 #Añado el número de distirto para tener mas informacion
 
-amm$num_distrito <- c(1, 7, 1, 9, 10, 2, 1, 1, 7)
+data_agrupacion$num_distrito <- c(1, 7, 1, 9, 10, 2, 1, 1, 7)
 
 #Para que los nombres de las filas de amm en vez de estar numerados , sea el código postal
-row.names(amm)<-amm$CÓDIGO_POSTAL
+row.names(data_agrupacion)<-data_agrupacion$CÓDIGO_POSTAL
 
 #algoritmo jerarquico simple
-datos_clust_simple <- hclust(dist(amm,method="euclidian"),method="single")
+datos_clust_simple <- hclust(dist(data_agrupacion,method="euclidian"),method="single")
 plot(datos_clust_simple)
 
 #Visualizo el  dendograma
@@ -899,7 +875,7 @@ fviz_dend(datos_clust_simple, k = 3,
   labs(title = "Dendograma (simple)")
 
 #algoritmo jerarquico completo
-datos_clust_completo <- hclust(dist(amm,method="euclidian"),method="complete")
+datos_clust_completo <- hclust(dist(data_agrupacion,method="euclidian"),method="complete")
 plot(datos_clust_completo)
 
 #Selecciono 3 clusteres, k = 3
@@ -915,7 +891,7 @@ fviz_dend(datos_clust_completo, k = 3,
   labs(title = "Dendograma (completo)")
 
 ##algoritmo jerarquico medio
-datos_clust_medio <- hclust(dist(amm,method="euclidian"),method="average")
+datos_clust_medio <- hclust(dist(data_agrupacion,method="euclidian"),method="average")
 plot(datos_clust_medio)
 
 #Selecciono 3 clusteres, k = 3
@@ -937,13 +913,13 @@ fviz_dend(datos_clust_medio, k = 3,
 set.seed(100)
 
 #Creamos los clusteres mediante kmeans
-amm.kmeans<-kmeans(amm,centers=4)
+data_agrupacion.kmeans<-kmeans(data_agrupacion,centers=4)
 #Observamos los resultados y la calidad de los mismos
-amm.kmeans
+data_agrupacion.kmeans
 
 #Represento los resultados
-cod_post<-amm$CÓDIGO_POSTAL
-grupo<-amm.kmeans$cluster
+cod_post<-data_agrupacion$CÓDIGO_POSTAL
+grupo<-data_agrupacion.kmeans$cluster
 datosc<-data.frame(cod_post,grupo)
 
 
@@ -1164,7 +1140,7 @@ dev.off()
 
 #---------------------Series temporales-------------------------------------
 
-p <- autoplot(peatones) + ggtitle("Peatones por año en Madrid") + xlab("Año") + ylab("Número de peatones")
+p <- autoplot(peatones) + ggtitle("peatones_por_año_en_madrid") + xlab("Año") + ylab("Número de peatones")
   pdf(file = "PDFs/Peatones por año en Madrid.pdf")
 p
 dev.off()
