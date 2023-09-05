@@ -789,7 +789,7 @@ peatones_alisado_simple=ses(peatones_TR, h=15)
 
 summary(peatones_alisado_simple)
 
-plot(peatones_alisado_simple) #Muestra la gráfica de las observaciones y predicciones
+autoplot(peatones_alisado_simple) #Muestra la gráfica de las observaciones y predicciones
 
 #Representamos los valores observados y los suavizados con la predicción para 15
 #días
@@ -800,7 +800,7 @@ autoplot(peatones_alisado_simple) +
 #---------------Alisado doble de Holt----------------------------------------------
 peatones_holt <- holt(peatones_TR, h=15) #15 predicciones hacia delante
 summary(peatones_holt) #Muestra el valor de alpha y Beta, predicciones e intervalos de confianza
-plot(peatones_holt) #Gráfica de las observaciones y predicciones
+autoplot(peatones_holt) #Gráfica de las observaciones y predicciones
 autoplot(peatones_holt) +
   autolayer(fitted(peatones_holt), series="Fitted") +
   ylab("precio") + xlab("dia")
@@ -1150,16 +1150,12 @@ pdf(file = "PDFs/descomposicion_serie_multiplicativo.pdf")
 p
 dev.off()
 
-p <- autoplot(peatones_alisado_simple) +
-  autolayer(fitted(peatones_alisado_simple), series="Fitted") +
-  ylab("peatones") + xlab("dia")
+p <- autoplot(peatones_alisado_simple)
 pdf(file = "PDFs/alisado_simple_peatones.pdf")
 p
 dev.off()
 
-p <- autoplot(peatones_holt) +
-  autolayer(fitted(peatones_holt), series="Fitted") +
-  ylab("peatones") + xlab("dia")
+p <- autoplot(peatones_holt)
 pdf(file = "PDFs/alisado_doble_Holt.pdf")
 p
 dev.off()
