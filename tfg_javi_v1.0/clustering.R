@@ -1,3 +1,45 @@
+# Cargo las librerias
+library(gifski)
+library(ggplot2)
+library(lubridate)
+library(tidyverse)
+library(sf)
+library(tmap)
+library(readxl)
+library(forecast)
+library(dplyr)
+library(fUnitRoots)
+library(lmtest)
+library(zoo)
+library(factoextra)
+
+#Para limpiar los datos
+rm(list=ls())
+
+PEATONES_2019 <- read_excel("PEATONES/PEATONES_2019.xlsx")
+View(PEATONES_2019)
+
+PEATONES_2020 <- read_excel("PEATONES/PEATONES_2020.xlsx")
+View(PEATONES_2020)
+
+PEATONES_2021 <- read_excel("PEATONES/PEATONES_2021.xlsx")
+View(PEATONES_2021)
+
+#Una vez tenemos cargados los datasets pasamos al mismo formato todos los datos de los 3 dataset
+
+PEATONES_2019$FECHA<-as.Date(PEATONES_2019$FECHA, "%d-%m-%y")
+PEATONES_2019$HORA<-as.character(PEATONES_2019$HORA)
+
+PEATONES_2021$FECHA<-as.Date(PEATONES_2021$FECHA, "%d-%m-%y")
+PEATONES_2021$HORA<-as.character(PEATONES_2021$HORA)
+
+PEATONES_2020$FECHA<-as.Date(PEATONES_2020$FECHA, "%d-%m-%y")
+PEATONES_2020$HORA<-format(as.POSIXct(PEATONES_2020$HORA), format = "%H:%M")
+PEATONES_2020$HORA<-as.character(PEATONES_2020$HORA)
+
+#Unimos los datos de PEATONES_2019, PEATONES_2020 Y PEATONES_2021
+PEATONES_TOTAL <- rbind(PEATONES_2019,PEATONES_2020)
+PEATONES_TOTAL <- rbind(PEATONES_TOTAL,PEATONES_2021)
 #--------------------------Clustering------------------------------
 
 #Hago una agrupación de PEATONES_TOTAL y una suma de los peatones para trabajar con el total
